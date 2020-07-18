@@ -73,7 +73,7 @@ def main():
         WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.ID, 'page-content')))
 
     flattened_products = [item for sublist in all_products for item in sublist]
-    # TODO(davelis1): Take products and write them to csv
+    write_products_to_csv(flattened_products)
 
 def get_all_products_on_page(driver):
     # Clicking one product lets us see all 20 products.
@@ -100,6 +100,9 @@ def get_all_products_on_page(driver):
     json_object_no_comma = json_object[:len(json_object)-1]
     one_page_products = json.loads(json_object_no_comma)
     return one_page_products
+
+def write_products_to_csv(products):
+    pass
 
 if __name__ == "__main__":
     main()
