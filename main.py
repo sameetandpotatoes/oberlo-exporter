@@ -28,16 +28,17 @@ driver.get('https://accounts.shopify.com/store-login')
 login = driver.find_element_by_name('shop[domain]')
 login.send_keys(shopify_url)
 driver.find_element_by_name('commit').click()
+driver.implicitly_wait(3) # seconds
 
-email = driver.find_element_by_name('account[email]')
-email.send_keys(email)
+email_driver = driver.find_element_by_name('account[email]')
+email_driver.send_keys(email)
 driver.find_element_by_tag_name('form').submit()
-# driver.implicitly_wait(3) # seconds
+driver.implicitly_wait(3) # seconds
 
-password = driver.find_element_by_name('account[password]')
-password.send_keys(password)
+password_driver = driver.find_element_by_name('account[password]')
+password_driver.send_keys(password)
 driver.find_element_by_tag_name('form').submit()
-# driver.implicitly_wait(3) # seconds
+driver.implicitly_wait(3) # seconds
 
 # Click Apps
 
@@ -74,6 +75,6 @@ all_page_text = driver.page_source
 json_object_start = all_page_text[all_page_text.find("myProducts: [{")+len("myProducts: "):]
 json_object = json_object_start[:json_object_start.find("filters")].strip()
 json_object_no_comma = json_object[:len(json_object)-1]
-print(json.loads(json_object_no_comma))
+print(json.dumps(json.loads(json_object_no_comma)))
 
 # Click navigate, go to next page, and repeat
