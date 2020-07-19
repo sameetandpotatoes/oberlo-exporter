@@ -102,6 +102,7 @@ def get_all_products_on_page(driver):
     return one_page_products
 
 def write_products_to_csv(products):
+    file_name=f'{shopify_url.split('.myshopify.com')[0]}_product_list_master.csv'
     pass
 
 if __name__ == "__main__":
