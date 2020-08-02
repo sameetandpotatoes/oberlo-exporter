@@ -1,3 +1,4 @@
+import csv
 import json
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -30,15 +31,18 @@ def main():
 
     # Go to Shopify
     driver.get('https://accounts.shopify.com/store-login')
+    WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.ID, 'body-content')))
 
     # Click Login, Fill out shopify URL, click login, fill out password, click login
     login = driver.find_element_by_name('shop[domain]')
     login.send_keys(shopify_url)
     driver.find_element_by_name('commit').click()
+    WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.ID, 'body-content')))
 
     email_driver = driver.find_element_by_name('account[email]')
     email_driver.send_keys(email)
     driver.find_element_by_tag_name('form').submit()
+    WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.ID, 'body-content')))
 
     password_driver = driver.find_element_by_name('account[password]')
     password_driver.send_keys(password)
@@ -75,6 +79,8 @@ def main():
     flattened_products = [item for sublist in all_products for item in sublist]
     write_products_to_csv(flattened_products)
 
+    driver.quit()
+
 def get_all_products_on_page(driver):
     # Clicking one product lets us see all 20 products.
     # How? The page has some JavaScript that contains all the data we need.
@@ -102,8 +108,17 @@ def get_all_products_on_page(driver):
     return one_page_products
 
 def write_products_to_csv(products):
-    file_name=f'{shopify_url.split('.myshopify.com')[0]}_product_list_master.csv'
-    pass
+    file_name=f"{shopify_url.split('.myshopify.com')[0]}_product_list_master.csv"
+    fieldnames = ['Product ID', 'Product Title', 'AliExpress URL']
+    with open(file_name, 'w') as csv_file:
+        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+        writer.writeheader()
+        for prod in products:
+            writer.writerow({
+                'Product ID': prod['id'],
+                'Product Title': prod['title'],
+                'AliExpress URL': prod['url']
+            })
 
 if __name__ == "__main__":
     main()
